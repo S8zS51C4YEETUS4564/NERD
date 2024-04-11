@@ -18,7 +18,7 @@ The header provides what is essentially the interface for the library's usage, d
 
 The implementation provides the actual source code that makes the library function (99% just actually providing the code for the defined functions). The implementation is triggered by a manual macro defined before inclusion of the file (usually formatted like `MUX_IMPLEMENTATION`), and, if this macro goes undefined, the actual source code for the library will never be provided and will most likely cause errors and/or warnings.
 
-Noe that both sections provide their respective section for its included libraries (ie, if the library muX has a dependency on muY, the header for muY will be stored in the header section of muX and the implementation for muY will be stored in the implementation section of muX). If a library's header/implementation section is already defined, it will be skipped, but a check on a possible version mismatch will be performed and will throw a warning. This functionality is overridable by defining INSERT_MACRO_HERE.
+Noe that both sections provide their respective section for its included libraries (ie, if the library muX has a dependency on muY, the header for muY will be stored in the header section of muX and the implementation for muY will be stored in the implementation section of muX). If a library's header/implementation section is already defined, it will be skipped, but a check on a possible version mismatch will be performed and will throw a warning. This functionality is overridable by defining MU_CHECK_VERSION_MISMATCHING.
 
 ## C/C++ standards and general compiler compatability
 
@@ -191,15 +191,15 @@ Within the first `...` is the header section of other libraries that this librar
 
 ### Inclusion of other library headers
 
-Other libraries' header sections are included within this section. If they've already been defined, a check for version mismatching is performed that can be turned off with `INSERT_MACRO_HERE` being defined beforehand. This is, generally, what that looks like:
+Other libraries' header sections are included within this section. If they've already been defined, a check for version mismatching is performed that can be turned off with `MU_CHECK_VERSION_MISMATCHING` being defined beforehand. This is, generally, what that looks like:
 
 ```
 /* Library version n.n.n header */
 	
-	#if !defined(INSERT_MACRO_HERE) && defined(LIBRARY_H) && \
+	#if !defined(MU_CHECK_VERSION_MISMATCHING) && defined(LIBRARY_H) && \
 		(LIBRARY_VERSION_MAJOR != n || LIBRARY_VERSION_MINOR != n || LIBRARY_VERSION_PATCH != n)
 		
-		#pragma message("[...] Library's header has already been defined, but version doesn't match the version that this library is built for. This may lead to errors, warnings, or unexpected behavior. Define INSERT_MACRO_HERE before this to turn off this message.")
+		#pragma message("[...] Library's header has already been defined, but version doesn't match the version that this library is built for. This may lead to errors, warnings, or unexpected behavior. Define MU_CHECK_VERSION_MISMATCHING before this to turn off this message.")
 
 	#endif
 
